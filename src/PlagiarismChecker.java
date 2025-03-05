@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 
 /**
  * Plagiarism Checker
@@ -18,26 +17,38 @@ public class PlagiarismChecker {
      */
     public static int longestSharedSubstring(String doc1, String doc2) {
 
-        // TODO Complete this function to return the length of the longest shared substring.
-        int longest = Math.max(doc1.length(), doc2.length());
-        int biggest = 0;
-        ArrayList<Integer> arr = new ArrayList<>();
-        for (int i = 0; i < longest; i++) {
-            biggest = recurse(i, doc1, doc2, arr);
+        int biggest;
+        int[][] lcs = new int[doc1.length() + 1][doc2.length() + 1];
+        //Row and cols already set to 0
+        //Iterate
+        for (int i = 1; i < lcs.length; i++) {
+            for (int j = 1; j < lcs[0].length; j++) {
+                //If current characters are equal, add corner to the top left + 1
+                if (doc1.charAt(i - 1) == doc2.charAt(j - 1)) {
+                    lcs[i][j] = lcs[i - 1][j - 1] + 1;
+                }
+                //Else grab the biggest value out of the two adjacent squares above and to left
+                else {
+                    lcs[i][j] = Math.max(lcs[i - 1][j], lcs[i][j - 1]);
+                }
+            }
         }
+        //return biggest
+        biggest = lcs[doc1.length()][doc2.length()];
         return biggest;
     }
 
-    public static int recurse(int index, String doc1, String doc2, ArrayList<Integer> arr) {
-        int longest = Math.max(doc1.length(), doc2.length());
-        if (index > longest) {
+    //This was the memoization approach, not completely sure if it works but didn't want to delete
+    /*public static int recurse(int i, int j, String doc1, String doc2, int[][] arr) {
+        if (i == 0 || j == 0) {
             return 0;
         }
-        if (arr.indexOf(index) != 0) {
-            return arr.get(index);
+        if (doc1.charAt(i - 1) == doc2.charAt(j - 1) {
+            arr[i][j] = recurse(i - 1, j - 1, doc1, doc2, arr);
         }
-        int len = Math.max(recurse(index + 1, doc1, doc2, arr), recurse(index, doc1.substring(index), doc2, arr));
-        arr.add(len);
-        return 1 + len;
-    }
+        else {
+            arr[i][j] = Math.max(recurse(i - 1, j, doc1, doc2, arr), recurse(i, j - 1, doc1, doc2, arr));
+        }
+        return arr[doc1.length()][doc2.length()];
+    }*/
 }
